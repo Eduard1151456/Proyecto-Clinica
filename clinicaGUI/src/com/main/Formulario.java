@@ -269,9 +269,6 @@ public class Formulario extends javax.swing.JFrame {
                 System.out.println("el boton guardar personal salud sirve");
 
             }
-            //este  controlador de evento se utiliza para llamar el matodo buscar de la clase PersonalDAO
-            //para efectuar la busqueda enviamos la clinica a la que pertenece y el documento del personal de la salud que estamos buscando
-            //junto con la conexion el metodos nos devuelve un objeto de tipo personal salud que contiene la informacion de la persona que buscamos 
             if (e.getActionCommand().equals("Buscar")) {
                 System.out.println("el boton buscar personal salud sirve");
                 String documentoBuscar = "";
@@ -287,12 +284,9 @@ public class Formulario extends javax.swing.JFrame {
                 prueba.jTextAreaMostrarPersonal.setText(mostrar);
 
             }
-            //este  controlador de evento se utiliza para actualizar el estado de salud del personal de la salud al cual se le realizo la prueba semanal
             if (e.getActionCommand().equals("Actualizar")) {
                 String documentoBuscar = prueba.jTextFieldDocumentoBusqueda.getText();
                 String estado = (String) prueba.jComboBoxActualizarEstado.getSelectedItem();
-               
-               
                 try {
                     personalDAO.actualizarEstado(Conexion.obtener(), documentoBuscar, estado);
 
@@ -305,24 +299,6 @@ public class Formulario extends javax.swing.JFrame {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-//este  controlador de evento se utiliza para llamar el metodo contarEstados de la clase clinicaDAO
-//el cual retorna una cadena conla informacion ordenada por estados de las estadisticas de los pacientes y el personal de la salud
-//            if (e.getActionCommand().equals("Mostrar estadisticas")) {
-//
-//                String mostrar = "";
-//                try {
-//                    mostrar = clinicaDao.contarEstados();
-//                    System.out.println(mostrar);
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (ClassNotFoundException ex) {
-//                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//                estadistica.jTextAreaEstadisticas.setText(mostrar);
-//                System.out.println("el boton estadisticas sirve ");
-//            }
-//            
-
             if (e.getActionCommand().equals("Mostrar estadisticas")) {
                   estadistica.jButtonEstadisticas.setEnabled(false);
                 // Obtener los datos de los estados utilizando el método contarEstados() del objeto clinicaDao
@@ -334,16 +310,12 @@ public class Formulario extends javax.swing.JFrame {
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-                // Crear un objeto DefaultPieDataset con los datos de los estados
                 DefaultPieDataset dataset = new DefaultPieDataset();
                 dataset.setValue("SOSPECHOSO  " + obtenerCantidad(datos, "SOSPECHOSO"), obtenerCantidad(datos, "SOSPECHOSO"));
                 dataset.setValue("POSITIVO  " + obtenerCantidad(datos, "POSITIVO"), obtenerCantidad(datos, "POSITIVO"));
                 dataset.setValue("NEGATIVO  " + obtenerCantidad(datos, "NEGATIVO"), obtenerCantidad(datos, "NEGATIVO"));
                 dataset.setValue("RECUPERADO  " + obtenerCantidad(datos, "RECUPERADO"), obtenerCantidad(datos, "RECUPERADO"));
                 dataset.setValue("MUERTO" + obtenerCantidad(datos, "MUERTO"), obtenerCantidad(datos, "MUERTO"));
-
-                // Crear un objeto JFreeChart con el dataset de los estados
                 JFreeChart chart = ChartFactory.createPieChart(
                         "Estados de COVID-19",
                         dataset,
@@ -351,12 +323,8 @@ public class Formulario extends javax.swing.JFrame {
                         true,
                         false
                 );
-
-                // Configurar el gráfico de pastel
                 PiePlot plot = (PiePlot) chart.getPlot();
-
                 StandardPieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator("{0}: {1}");
-
                 plot.setStartAngle(290);
                 plot.setDirection(Rotation.CLOCKWISE);
                 plot.setForegroundAlpha(1.0f);
@@ -365,29 +333,14 @@ public class Formulario extends javax.swing.JFrame {
                 plot.setSectionPaint("NEGATIVO", new Color(128, 255, 128));
                 plot.setSectionPaint("RECUPERADO", new Color(128, 255, 255));
                 plot.setSectionPaint("MUERTO", new Color(128, 128, 255));
-
-// Crear un objeto ChartPanel con el gráfico de pastel
                 ChartPanel chartPanel = new ChartPanel(chart);
                 chartPanel.setPreferredSize(new Dimension(900, 500));
-
                 estadistica.setLayout(new FlowLayout());
                 estadistica.add(chartPanel);
                 estadistica.revalidate();
                 estadistica.repaint();
-
                 System.out.println(datos);
                 System.out.println(chartPanel);
-                
-               // Agregar un ActionListener al botón para manejar los clics
-//estadistica.jButtonEstadisticas.addActionListener(new ActionListener() {
-//    @Override
-//    public void actionPerformed(ActionEvent e) {
-//        // Aquí iría el código que se ejecuta cuando se hace clic en el botón
-//
-//        // Desactivar el botón después de hacer clic en él
-//        estadistica.jButtonEstadisticas.setEnabled(false);
-//    }
-//});
             }
         }
     }
@@ -412,11 +365,6 @@ public class Formulario extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -464,42 +412,6 @@ public class Formulario extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-//    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(Formulario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(Formulario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(Formulario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(Formulario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new Formulario().setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.raven.swing.PictureBox pictureBox1;

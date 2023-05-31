@@ -1,12 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
+
 package modeloVO;
-
 import java.util.ArrayList;
-
-
 public class ClinicaVO {
     private String nombre;
     private String direccion;
@@ -18,38 +12,31 @@ public class ClinicaVO {
         this.listaPacientes = new ArrayList<>();
         this.listaPersonal = new ArrayList<>();
     }
-
-    
     public ClinicaVO( String nombre,String direccion) {
         this.direccion = direccion;
         this.nombre = nombre;
         this.listaPacientes = new ArrayList<>();
         this.listaPersonal = new ArrayList<>();
     }
-
     public PacienteVO buscarPaciente(String documento) {
     for (PacienteVO paciente : listaPacientes) {
         if (paciente.getDocumento().equals(documento)) {
             return paciente;
         }
-    }
-    
+    }  
     return null;
-}
-    
+}  
     public PersonalSaludVO buscarPersonal(String documento) {
     for (PersonalSaludVO personal : listaPersonal) {
         if (personal.getDocumento().equals(documento)) {
             return personal;
         }
-    }
-    
+    }  
     return null;
 }
     public String getDireccion() {
         return direccion;
     }
-
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }

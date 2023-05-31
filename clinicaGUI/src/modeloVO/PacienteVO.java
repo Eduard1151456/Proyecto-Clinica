@@ -6,10 +6,6 @@ package modeloVO;
 
 import java.util.Date;
 
-/**
- *
- * @author Eduard
- */
 public class PacienteVO extends  PersonaVO {
     
     private String lugarProcendia;//para determinar si ha viajado recientemente a algún país con contagio
@@ -19,7 +15,6 @@ public class PacienteVO extends  PersonaVO {
 
     public PacienteVO() {
     }
-
     public PacienteVO(String lugarProcendia, Date FechaDeteccion, String tratado, String personasPosibleContacto, String documento, String nombre, String direccion, String telefono, String genero, Date fechaNacimiento, String estado) {
         super(documento, nombre, direccion, telefono, genero, fechaNacimiento, estado);
         this.lugarProcendia = lugarProcendia;
