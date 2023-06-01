@@ -1,43 +1,50 @@
 
 package modeloDAO;
+
 import clinica.RegistroCovid_19;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.sql.ResultSet;
 import modeloVO.ClinicaVO;
+
 public class ClinicaDAO {
-    public void guardar(Connection conexion, RegistroCovid_19 registro) throws SQLException {
-    try {       
-        PreparedStatement consultaConteo = conexion.prepareStatement("SELECT COUNT(*) AS total FROM clinica");
-        ResultSet resultado = consultaConteo.executeQuery();
-        resultado.next();
-        int totalClinicas = resultado.getInt("total");
-        if (totalClinicas < 5) {  
-            for (ClinicaVO c : registro.getClinica()) {
-                PreparedStatement consultaInsercion = conexion.prepareStatement("INSERT IGNORE INTO clinica (nombre, direccion) VALUES (?, ?)");
-                consultaInsercion.setString(1, c.getNombre());
-                consultaInsercion.setString(2, c.getDireccion());
-                consultaInsercion.executeUpdate();
-            }
-        } else {
-            System.out.println("No se pueden insertar más clínicas");
-        }
-    } catch (SQLException ex) {
-        throw new SQLException(ex);
+    private Connection conexion; // Agregar una variable de instancia para la conexión
+
+    public ClinicaDAO(Connection conexion) {
+        this.conexion = conexion;
     }
-}
+
+    public void guardar(RegistroCovid_19 registro) throws SQLException {
+        try {
+            PreparedStatement consultaConteo = conexion.prepareStatement("SELECT COUNT(*) AS total FROM clinica");
+            ResultSet resultado = consultaConteo.executeQuery();
+            resultado.next();
+            int totalClinicas = resultado.getInt("total");
+            if (totalClinicas < 5) {
+                for (ClinicaVO c : registro.getClinica()) {
+                    PreparedStatement consultaInsercion = conexion.prepareStatement("INSERT IGNORE INTO clinica (nombre, direccion) VALUES (?, ?)");
+                    consultaInsercion.setString(1, c.getNombre());
+                    consultaInsercion.setString(2, c.getDireccion());
+                    consultaInsercion.executeUpdate();
+                }
+            } else {
+                System.out.println("No se pueden insertar más clínicas");
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex);
+        }
+    }
+
     public String contarEstados() throws SQLException, ClassNotFoundException {
-        Connection conexion = null;
         PreparedStatement consulta = null;
         ResultSet resultados = null;
         StringBuilder sb = new StringBuilder();
         Map<String, Integer> estados = new HashMap<>();
 
         try {
-            conexion = obtenerConexion();
             consulta = conexion.prepareStatement("SELECT estado, COUNT(*) FROM personal_salud GROUP BY estado");
             resultados = consulta.executeQuery();
 
@@ -76,13 +83,6 @@ public class ClinicaDAO {
             if (consulta != null) {
                 consulta.close();
             }
-            if (conexion != null) {
-                conexion.close();
-            }
         }
     }
-public static Connection obtenerConexion() throws SQLException, ClassNotFoundException {
-    Connection conexion = Conexion.obtener();
-    return conexion;
-}
 }

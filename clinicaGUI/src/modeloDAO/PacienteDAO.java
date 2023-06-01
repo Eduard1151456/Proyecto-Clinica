@@ -2,20 +2,40 @@
 package modeloDAO;
 
 import modeloVO.ClinicaVO;
+import modeloVO.PacienteVO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import modeloVO.PacienteVO;
 import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 public class PacienteDAO {
-    public void guardar(Connection conexion, PacienteVO paciente) throws SQLException {
-        try {
+    private Connection conexion;
 
-            PreparedStatement consulta;
-            consulta = conexion.prepareStatement("INSERT INTO paciente (documento, nombre, direccion, telefono, genero, fecha_nacimiento, estado, lugar_procedencia, fecha_deteccion, tratado, personas_posible_contacto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    public PacienteDAO(Connection conexion) {
+        this.conexion = conexion;
+    }
+
+   public void guardar(PacienteVO paciente) throws SQLException {
+    try {
+        PreparedStatement consulta;
+
+        // Verificar si ya existe un registro con el mismo valor en la columna clave primaria
+        String query = "SELECT COUNT(*) FROM paciente WHERE documento = ?";
+        consulta = conexion.prepareStatement(query);
+        consulta.setString(1, paciente.getDocumento());
+        ResultSet resultado = consulta.executeQuery();
+        resultado.next();
+        int count = resultado.getInt(1);
+
+        if (count > 0) {
+            // Ya existe un registro con el mismo valor en la columna clave primaria
+            JOptionPane.showMessageDialog(null, "El documento ya está registrado en la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            // No existe un registro duplicado, proceder con la inserción
+            query = "INSERT INTO paciente (documento, nombre, direccion, telefono, genero, fecha_nacimiento, estado, lugar_procedencia, fecha_deteccion, tratado, personas_posible_contacto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            consulta = conexion.prepareStatement(query);
             consulta.setString(1, paciente.getDocumento());
             consulta.setString(2, paciente.getNombre());
             consulta.setString(3, paciente.getDireccion());
@@ -24,20 +44,22 @@ public class PacienteDAO {
             consulta.setDate(6, new java.sql.Date(paciente.getFechaNacimiento().getTime()));
             consulta.setString(7, paciente.getEstado());
             consulta.setString(8, paciente.getLugarProcendia());
-             if (paciente.getFechaDeteccion() != null) {
-            consulta.setDate(9, new java.sql.Date(paciente.getFechaDeteccion().getTime()));
-        } else {
-            consulta.setNull(9, java.sql.Types.DATE);
-        }
+            if (paciente.getFechaDeteccion() != null) {
+                consulta.setDate(9, new java.sql.Date(paciente.getFechaDeteccion().getTime()));
+            } else {
+                consulta.setNull(9, java.sql.Types.DATE);
+            }
             consulta.setString(10, paciente.getTratado());
             consulta.setString(11, paciente.getPersonasPosibleContacto());
             consulta.executeUpdate();
-           
-        } catch (SQLException ex) {
-            throw new SQLException(ex);
         }
+
+    } catch (SQLException ex) {
+        throw ex;
     }
-    public boolean eliminarPaciente(Connection conexion, String documento) {
+}
+
+    public boolean eliminarPaciente(String documento) {
         boolean eliminacionExitosa = false;
         PreparedStatement consulta = null;
         try {
@@ -51,7 +73,8 @@ public class PacienteDAO {
         }
         return eliminacionExitosa;
     }
-    public void actualizar(Connection conexion, PacienteVO paciente) throws SQLException {
+
+    public void actualizar(PacienteVO paciente) throws SQLException {
         try {
             PreparedStatement consulta;
             consulta = conexion.prepareStatement("UPDATE pacientes SET nombre = ?, direccion = ?, telefono = ?, genero = ?, fecha_nacimiento = ?, estado = ?, lugar_procedencia = ?, fecha_deteccion = ?, tratado = ?, personas_posible_contacto = ? WHERE documento = ? AND clinica_id = ?");
@@ -66,7 +89,6 @@ public class PacienteDAO {
             consulta.setString(9, paciente.getTratado());
             consulta.setString(10, paciente.getPersonasPosibleContacto());
             consulta.setString(11, paciente.getDocumento());
-           
 
             consulta.executeUpdate();
         } catch (SQLException ex) {
@@ -74,7 +96,7 @@ public class PacienteDAO {
         }
     }
 
-    public void actualizarEstado(Connection conexion, String documento, String nuevoEstado, ClinicaVO clinica) throws SQLException {
+    public void actualizarEstado(String documento, String nuevoEstado, ClinicaVO clinica) throws SQLException {
         try {
             PreparedStatement consulta;
             consulta = conexion.prepareStatement("UPDATE pacientes SET estado = ? WHERE documento = ? AND clinica_id = ?");

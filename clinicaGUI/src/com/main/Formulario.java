@@ -20,6 +20,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
@@ -64,17 +65,22 @@ public class Formulario extends javax.swing.JFrame {
 
     /**
      * Creates new form Main
+     * @param registro
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException
      */
-    public Formulario(RegistroCovid_19 registro) {
+    public Formulario(RegistroCovid_19 registro) throws SQLException, ClassNotFoundException {
 
         this.setTitle("Registro Covid_19");
         this.setIconImage(new ImageIcon("com/raven/icon/icono.png").getImage());
         r = registro;
 
         initComponents();
-        clinicaDao = new ClinicaDAO();
-        pacienteDao = new PacienteDAO();
-        personalDAO = new PersonalSaludDAO();
+     Connection conexion = Conexion.obtener(); 
+
+    clinicaDao = new ClinicaDAO(conexion);
+    pacienteDao = new PacienteDAO(conexion);
+    personalDAO = new PersonalSaludDAO(conexion);
 
         clinicaVO = new ClinicaVO();
         this.setVisible(true);
@@ -117,19 +123,15 @@ public class Formulario extends javax.swing.JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            //este  controlador de evento se utiliza para validar los datos ingresados por el usuario en un formulario de registro de pacientes
-//y guardar los datos en una base de datos si se cumplen ciertos criterios. Además, 
-//este método proporciona retroalimentación al usuario en caso de que se detecten errores al ingresar los datos.
+
             if (e.getActionCommand().equals("Registrar")) {
                 System.out.println("el boton registrar 2 sirve ");
 
                 try {
-                    clinicaDao.guardar(Conexion.obtener(), r);
+                    clinicaDao.guardar(r);
                 } catch (SQLException ex) {
                     Logger.getLogger(Formulario.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Formulario.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                } 
 
                 String documento = registroPaciente.jTextFieldDocumento1.getText();
                 String nombre = registroPaciente.jTextFieldNombre1.getText();
@@ -196,9 +198,9 @@ public class Formulario extends javax.swing.JFrame {
                 registroPaciente.jLabel3.setText("Registro Exitoso");
                 try {
                     //llamar el metodo guardar del la clase pacienteDAO para hacer la conexion con la base de datos y llebar a cabo el registro
-                    pacienteDao.guardar(Conexion.obtener(), paciente);
+                    pacienteDao.guardar(paciente);
                     
-                } catch (SQLException | ClassNotFoundException ex) {
+                } catch (SQLException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
@@ -259,11 +261,9 @@ public class Formulario extends javax.swing.JFrame {
                 // Crear el objeto PersonalSaludVO con los datos ingresados por el usuario
                 PersonalSaludVO personalSalud = new PersonalSaludVO(especialidad, documento, nombre, direccion, telefono, genero, fechaNacimiento, estado);
                 try {
-                    personalDAO.guardar(Conexion.obtener(), personalSalud);
+                    personalDAO.guardar(personalSalud);
                     registroPersonal.jLabelRegistro.setText("Registro Exitoso");
                 } catch (SQLException ex) {
-                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 System.out.println("el boton guardar personal salud sirve");
@@ -276,8 +276,8 @@ public class Formulario extends javax.swing.JFrame {
                 PersonalSaludVO personalSalud = new PersonalSaludVO();
 
                 try {
-                    personalSalud = personalDAO.buscar(Conexion.obtener(), documentoBuscar);
-                } catch (SQLException | ClassNotFoundException ex) {
+                    personalSalud = personalDAO.buscar(documentoBuscar);
+                } catch (SQLException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 String mostrar = "Nombre: " + personalSalud.getNombre() + "  Especialidad: " + personalSalud.getEspecialidad() + "\n" + "Estado: " + personalSalud.getEstado();
@@ -288,14 +288,12 @@ public class Formulario extends javax.swing.JFrame {
                 String documentoBuscar = prueba.jTextFieldDocumentoBusqueda.getText();
                 String estado = (String) prueba.jComboBoxActualizarEstado.getSelectedItem();
                 try {
-                    personalDAO.actualizarEstado(Conexion.obtener(), documentoBuscar, estado);
+                    personalDAO.actualizarEstado(documentoBuscar, estado);
 
                     prueba.jTextAreaMostrarPersonal.setText("");
                     prueba.jTextAreaMostrarPersonal.setText("El estado del personal de salud ha sido actualizado...");
                     System.out.println("el boton actualizar personal salud sirve");
                 } catch (SQLException ex) {
-                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

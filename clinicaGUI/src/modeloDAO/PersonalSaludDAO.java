@@ -1,15 +1,40 @@
 
 package modeloDAO;
+
+import modeloVO.PersonalSaludVO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.ResultSet;
-import modeloVO.PersonalSaludVO;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 public class PersonalSaludDAO {
-    public void guardar(Connection conexion, PersonalSaludVO personalSalud) throws SQLException {
-        try {
-            PreparedStatement consulta;
-            consulta = conexion.prepareStatement("INSERT INTO personal_salud (documento, nombre, direccion, telefono, genero, fecha_nacimiento,estado, especialidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    private Connection conexion;
+
+    public PersonalSaludDAO(Connection conexion) {
+        this.conexion = conexion;
+    }
+
+    public void guardar(PersonalSaludVO personalSalud) throws SQLException {
+    try {
+        PreparedStatement consulta;
+
+        // Verificar si ya existe un registro con el mismo valor en la columna clave primaria
+        String query = "SELECT COUNT(*) FROM personal_salud WHERE documento = ?";
+        consulta = conexion.prepareStatement(query);
+        consulta.setString(1, personalSalud.getDocumento());
+        ResultSet resultado = consulta.executeQuery();
+        resultado.next();
+        int count = resultado.getInt(1);
+
+        if (count > 0) {
+            // Ya existe un registro con el mismo valor en la columna clave primaria
+            JOptionPane.showMessageDialog(null, "El documento ya está registrado en la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            // No existe un registro duplicado, proceder con la inserción
+            query = "INSERT INTO personal_salud (documento, nombre, direccion, telefono, genero, fecha_nacimiento, estado, especialidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            consulta = conexion.prepareStatement(query);
             consulta.setString(1, personalSalud.getDocumento());
             consulta.setString(2, personalSalud.getNombre());
             consulta.setString(3, personalSalud.getDireccion());
@@ -18,28 +43,30 @@ public class PersonalSaludDAO {
             consulta.setDate(6, new java.sql.Date(personalSalud.getFechaNacimiento().getTime()));
             consulta.setString(7, personalSalud.getEstado());
             consulta.setString(8, personalSalud.getEspecialidad());
-            
-            consulta.executeUpdate();
 
-            
-        } catch (SQLException ex) {
-            throw new SQLException(ex);
+            consulta.executeUpdate();
         }
+
+    } catch (SQLException ex) {
+        throw new SQLException(ex);
     }
-    public void actualizarEstado(Connection conexion, String documento, String nuevoEstado) throws SQLException {
+}
+
+    public void actualizarEstado(String documento, String nuevoEstado) throws SQLException {
         try {
             PreparedStatement consulta;
-            consulta = conexion.prepareStatement("UPDATE personal_salud SET estado = ? WHERE documento = ? ");
+            consulta = conexion.prepareStatement("UPDATE personal_salud SET estado = ? WHERE documento = ?");
             consulta.setString(1, nuevoEstado);
             consulta.setString(2, documento);
-            
+
             consulta.executeUpdate();
             consulta.close();
         } catch (SQLException ex) {
             throw new SQLException(ex);
         }
     }
-    public PersonalSaludVO buscar(Connection conexion, String documento) throws SQLException {
+
+    public PersonalSaludVO buscar(String documento) throws SQLException {
         PersonalSaludVO resultado = null;
         try {
             PreparedStatement consulta;
@@ -56,7 +83,7 @@ public class PersonalSaludDAO {
                 resultado.setGenero(rs.getString("genero"));
                 resultado.setFechaNacimiento(rs.getDate("fecha_nacimiento"));
                 resultado.setEstado(rs.getString("estado"));
-                resultado.setEspecialidad(rs.getString("especialidad"));      
+                resultado.setEspecialidad(rs.getString("especialidad"));
             }
 
             rs.close();
@@ -66,5 +93,4 @@ public class PersonalSaludDAO {
         }
         return resultado;
     }
-
 }
