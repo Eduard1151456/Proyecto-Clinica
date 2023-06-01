@@ -11,12 +11,10 @@ import java.util.Map;
 import modeloVO.ClinicaVO;
 
 public class ClinicaDAO {
-    private Connection conexion; // Agregar una variable de instancia para la conexión
-
+    private Connection conexion;
     public ClinicaDAO(Connection conexion) {
         this.conexion = conexion;
     }
-
     public void guardar(RegistroCovid_19 registro) throws SQLException {
         try {
             PreparedStatement consultaConteo = conexion.prepareStatement("SELECT COUNT(*) AS total FROM clinica");

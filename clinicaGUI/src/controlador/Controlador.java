@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package controlador;
 
 import clinica.RegistroCovid_19;
@@ -10,10 +7,6 @@ import com.main.Formulario;
 import com.raven.component.RegistroPaciente;
 import com.raven.component.RegistroPersonalSalud;
 
-/**
- *
- * @author Eduard
- */
 public class Controlador {
 
     private Formulario formulario = null;

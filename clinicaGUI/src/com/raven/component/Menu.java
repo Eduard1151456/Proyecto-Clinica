@@ -21,30 +21,22 @@ public class Menu extends javax.swing.JPanel {
 
     public void initMenu(EventMenu event) {
         this.event = event;
-        addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/1.png")), "Registro Pacientes", 0);
-//        addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/2.png")), "Salir", 1);      
+        addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/1.png")), "Registro Pacientes", 0);     
         addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/3.png")), "Registro Personal Salud", 2);
         addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/4.png")), "Estadisticas", 3);
         addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/5.png")), "Pruebas  Personal ", 4);
-        
-    // Crear un nuevo botón "Salir"
     Button salirButton = new Button();
     salirButton.setHorizontalTextPosition(SwingConstants.CENTER);
     salirButton.setVerticalTextPosition(SwingConstants.BOTTOM);
     salirButton.setText("Salir");
     salirButton.setIcon(new ImageIcon(getClass().getResource("/com/raven/icon/2.png")));
 Continuación:
-
-    // Agregar un ActionListener al botón "Salir"
     salirButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent ae) {
-            // Cerrar el programa
             System.exit(0);
         }
     });
-
-    // Agregar el botón "Salir" al menú
     add(salirButton);
 
     }

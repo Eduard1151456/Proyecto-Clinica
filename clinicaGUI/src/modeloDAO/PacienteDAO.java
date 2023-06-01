@@ -20,8 +20,6 @@ public class PacienteDAO {
    public void guardar(PacienteVO paciente) throws SQLException {
     try {
         PreparedStatement consulta;
-
-        // Verificar si ya existe un registro con el mismo valor en la columna clave primaria
         String query = "SELECT COUNT(*) FROM paciente WHERE documento = ?";
         consulta = conexion.prepareStatement(query);
         consulta.setString(1, paciente.getDocumento());
@@ -30,10 +28,8 @@ public class PacienteDAO {
         int count = resultado.getInt(1);
 
         if (count > 0) {
-            // Ya existe un registro con el mismo valor en la columna clave primaria
             JOptionPane.showMessageDialog(null, "El documento ya está registrado en la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            // No existe un registro duplicado, proceder con la inserción
             query = "INSERT INTO paciente (documento, nombre, direccion, telefono, genero, fecha_nacimiento, estado, lugar_procedencia, fecha_deteccion, tratado, personas_posible_contacto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             consulta = conexion.prepareStatement(query);
             consulta.setString(1, paciente.getDocumento());

@@ -1,6 +1,5 @@
 package com.raven.component;
 import com.main.MainProgram;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class RegistroPaciente extends javax.swing.JPanel {

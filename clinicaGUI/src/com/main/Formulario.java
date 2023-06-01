@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.main;
 
 import clinica.RegistroCovid_19;
@@ -16,8 +12,6 @@ import controlador.Controlador;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -28,9 +22,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import modeloDAO.ClinicaDAO;
 import modeloDAO.Conexion;
 import modeloDAO.PacienteDAO;
@@ -45,30 +37,18 @@ import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.util.Rotation;
 import org.jfree.data.general.DefaultPieDataset;
-
-/**
- *
- * @author Eduard
- */
 public class Formulario extends javax.swing.JFrame {
 
     private RegistroPaciente registroPaciente;
     private RegistroPersonalSalud registroPersonal;
     private MostrarEstadistica estadistica;
     private PruebaSemanal prueba;
-
     private PacienteDAO pacienteDao;
     private PersonalSaludDAO personalDAO;
     private RegistroCovid_19 r;
     private ClinicaDAO clinicaDao;
     private ClinicaVO clinicaVO;
 
-    /**
-     * Creates new form Main
-     * @param registro
-     * @throws java.sql.SQLException
-     * @throws java.lang.ClassNotFoundException
-     */
     public Formulario(RegistroCovid_19 registro) throws SQLException, ClassNotFoundException {
 
         this.setTitle("Registro Covid_19");
@@ -94,29 +74,18 @@ public class Formulario extends javax.swing.JFrame {
         };
         Menu menu = new Menu();
         menu.initMenu(event);
-
-//        slideshow.initSlideshow(menu, new RegistroPaciente("Registro Pacientes"), new RegistroPaciente("Product"), new RegistroPaciente("Registro Personal Salud"), new RegistroPaciente("Reporte Estadisticas COVID-19"), new RegistroPaciente("Registro Semanal Pruevas Personal Salud"));
         registroPaciente = new RegistroPaciente("Registro Pacientes");
         registroPaciente.addActionListener(new MyActionListener());
-// Agregar componentes a subForm1
-
         RegistroPaciente subForm2 = new RegistroPaciente("Salir");
-// Agregar componentes a subForm2
         registroPersonal = new RegistroPersonalSalud("Registro Personal Salud");
         registroPersonal.addActionListener(new MyActionListener());
-// Agregar componentes a registroPersonal
-
         estadistica = new MostrarEstadistica("Reporte Estadisticas COVID-19");
         estadistica.addActionListener(new MyActionListener());
-// Agregar componentes a estadistica
-
         prueba = new PruebaSemanal("Registro Semanal Pruevas Personal Salud");
         prueba.addActionListener(new MyActionListener());
-// Agregar componentes a prueba
-
         slideshow.initSlideshow(menu, registroPaciente,subForm2, registroPersonal, estadistica, prueba);
 
-        // Clase que implementa el ActionListener
+
     }
 
     private class MyActionListener implements ActionListener {
@@ -143,7 +112,6 @@ public class Formulario extends javax.swing.JFrame {
                 String lugarProcedencia = registroPaciente.jTextFieldLugarProcedencia1.getText();
                 Date fechaDeteccion = registroPaciente.jDateChooserFechaDeteccion.getDate();
                 String tratado = (String) registroPaciente.jComboBoxProceso.getSelectedItem();
-//            String personasPosibleContacto = "";
                 String personasPosibleContacto = registroPaciente.jTextFieldDocumentoContacto1.getText() + "    " + registroPaciente.jTextFieldNombreContacto1.getText() + "\n"
                         + registroPaciente.jTextFieldDocumentoContacto2.getText() + "    " + registroPaciente.jTextFieldNombreContacto2.getText() + "\n"
                         + registroPaciente.jTextFieldDocumentoContacto3.getText() + "    " + registroPaciente.jTextFieldNombreContacto3.getText() + "\n"
@@ -298,14 +266,10 @@ public class Formulario extends javax.swing.JFrame {
                 }
             }
             if (e.getActionCommand().equals("Mostrar estadisticas")) {
-                  estadistica.jButtonEstadisticas.setEnabled(false);
-                // Obtener los datos de los estados utilizando el método contarEstados() del objeto clinicaDao
                 String datos = "";
                 try {
                     datos = clinicaDao.contarEstados();
-                } catch (SQLException ex) {
-                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
+                } catch (SQLException | ClassNotFoundException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 DefaultPieDataset dataset = new DefaultPieDataset();
@@ -356,7 +320,7 @@ public class Formulario extends javax.swing.JFrame {
 
     public boolean isNumeric(String cadena) {
         try {
-            Double.parseDouble(cadena);
+            Double.valueOf(cadena);
             return true;
         } catch (NumberFormatException ex) {
             return false;

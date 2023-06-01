@@ -1,38 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package clinica;
 
 import com.main.Formulario;
 import controlador.Controlador;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import modeloDAO.ClinicaDAO;
-import modeloDAO.Conexion;
 import modeloVO.ClinicaVO;
 
-
-/**
- *
- * @author Eduard
- */
 public class RegistroCovid_19 {
 
-    private ArrayList<ClinicaVO> clinica;
-
-    
-     
+    private ArrayList<ClinicaVO> clinica; 
     public ArrayList<ClinicaVO> getClinica() {
         return clinica;
     }
-
     public void setClinica(ArrayList<ClinicaVO> clinica) {
         this.clinica = clinica;
     }
-
-    
-  
    public static ArrayList<ClinicaVO> crearClinicas() {
         ArrayList<ClinicaVO> clinicas = new ArrayList<>();
         
@@ -53,7 +36,7 @@ public class RegistroCovid_19 {
         return null;
     }
    
-  public static void main(String [] args) throws SQLException {
+  public static void main(String [] args) throws SQLException, ClassNotFoundException {
        RegistroCovid_19 registro = new RegistroCovid_19();
        Formulario formulario =new Formulario(registro);
        registro.setClinica(crearClinicas());
@@ -64,6 +47,3 @@ public class RegistroCovid_19 {
     }
    
 }
-    
-    
-
