@@ -35,20 +35,20 @@ public class PanelCover extends javax.swing.JPanel {
     }
 
     private void init() {
-        title = new JLabel("Welcome Back!");
+        title = new JLabel("Bienvenido!");
         title.setFont(new Font("sansserif", 1, 30));
         title.setForeground(new Color(245, 245, 245));
         add(title);
-        description = new JLabel("To keep connected with us please");
+        description = new JLabel("para mantenerte conectado");
         description.setForeground(new Color(245, 245, 245));
         add(description);
-        description1 = new JLabel("login with your personal info");
+        description1 = new JLabel("inicia sesión");
         description1.setForeground(new Color(245, 245, 245));
         add(description1);
         button = new ButtonOutLine();
         button.setBackground(new Color(255, 255, 255));
         button.setForeground(new Color(255, 255, 255));
-        button.setText("SIGN IN");
+        button.setText("Iniciar sesión");
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -122,15 +122,15 @@ public class PanelCover extends javax.swing.JPanel {
     public void login(boolean login) {
         if (this.isLogin != login) {
             if (login) {
-                title.setText("hello, Friend!");
-                description.setText("Enter your personal details");
-                description1.setText("and start journey with us");
-                button.setText("SIGN UP");
+                title.setText("Enviar Correo");
+                description.setText("simple app");
+                description1.setText("para enviar correo");
+                button.setText("REDACTAR");
             } else {
-                title.setText("Welcome Back!");
-                description.setText("To keep connected with us please");
-                description1.setText("login with your personal info");
-                button.setText("SIGN IN");
+                title.setText("Bienvenido!");
+                description.setText("para mantenerte conectado");
+                description1.setText("inicia sesión");
+                button.setText("iniciar sesión");
             }
             this.isLogin = login;
         }
